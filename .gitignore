@@ -42,3 +42,6 @@ Homestead.json
 .phpunit.result.cache
 
 # End of https://www.gitignore.io/api/code,laravel
+
+public/css/*
+public/js/*

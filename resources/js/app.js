@@ -14,15 +14,26 @@ const app = new Vue({
     chat: {
       messages: [],
       users: [],
-      color: []
+      color: [],
+      time: []
+    },
+    typing: ''
+  },
+  watch: {
+    message() {
+      Echo.private('chat')
+        .whisper('typing', {
+          whispering: this.message
+        })
     }
   },
   methods: {
-    send () {
+    send() {
       if (this.message.length !== 0) {
         this.chat.messages.push(this.message)
         this.chat.users.push('you')
         this.chat.color.push('success')
+        this.chat.time.push(this.getTime())
 
         axios.post('/send', {
           message: this.message
@@ -35,15 +46,27 @@ const app = new Vue({
             console.log(failed)
           })
       }
+    },
+    getTime() {
+      let time = new Date()
+      return time.getHours() + ':' + time.getMinutes()
     }
   },
-  mounted () {
+  mounted() {
     Echo.private('chat')
       .listen('ChatEvent', (e) => {
         console.log(e)
         this.chat.messages.push(e.message)
         this.chat.users.push(e.user)
         this.chat.color.push('warning')
+        this.chat.time.push(e.time)
+      })
+      .listenForWhisper('typing', (e) => {
+        if (e.whispering !== '') {
+          this.typing = 'typing...'
+        } else {
+          this.typing = ''
+        }
       })
   }
 })
