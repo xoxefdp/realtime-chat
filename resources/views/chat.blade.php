@@ -18,14 +18,17 @@
     <div class="d-flex justify-content-center vh100">
       <div id="app" class="d-flex flex-column justify-content-center">
         <div class="vh50">
-          <li class="list-group-item active">Chat Room</li>
+          <li class="list-group-item active">
+            Chat Room
+            <span class="badge badge-pill badge-danger">@{{ numberOfUsers }}</span>
+          </li>
           <div class="badge badge-pill badge-primary">@{{ typing }}</div>
           <ul class="list-group" v-chat-scroll>
             <message
-              v-for="value,index in chat.messages"
+              v-for="value,index in chat.message"
               :key=value.index
               :color=chat.color[index]
-              :user=chat.users[index]
+              :user=chat.user[index]
               :time=chat.time[index]
             >
               @{{ value }}

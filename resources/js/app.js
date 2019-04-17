@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import VueChatScroll from 'vue-chat-scroll'
+import Toaster from 'v-toaster'
+import 'v-toaster/dist/v-toaster.css'
 
 Vue.use(VueChatScroll)
+Vue.use(Toaster, { timeout: 5000 })
 
 require('./bootstrap')
 
@@ -12,12 +15,13 @@ const app = new Vue({
   data: {
     message: '',
     chat: {
-      messages: [],
-      users: [],
+      message: [],
+      user: [],
       color: [],
       time: []
     },
-    typing: ''
+    typing: '',
+    numberOfUsers: 0
   },
   watch: {
     message() {
@@ -30,8 +34,8 @@ const app = new Vue({
   methods: {
     send() {
       if (this.message.length !== 0) {
-        this.chat.messages.push(this.message)
-        this.chat.users.push('you')
+        this.chat.message.push(this.message)
+        this.chat.user.push('you')
         this.chat.color.push('success')
         this.chat.time.push(this.getTime())
 
@@ -56,8 +60,8 @@ const app = new Vue({
     Echo.private('chat')
       .listen('ChatEvent', (e) => {
         console.log(e)
-        this.chat.messages.push(e.message)
-        this.chat.users.push(e.user)
+        this.chat.message.push(e.message)
+        this.chat.user.push(e.user)
         this.chat.color.push('warning')
         this.chat.time.push(e.time)
       })
@@ -68,5 +72,24 @@ const app = new Vue({
           this.typing = ''
         }
       })
+
+    Echo.join('chat')
+      .here(
+        (users) => {
+          this.numberOfUsers = users.length
+        }
+      )
+      .joining(
+        (user) => {
+          this.numberOfUsers += 1
+          this.$toaster.success(user.name + ' has joined the chat room')
+        }
+      )
+      .leaving(
+        (user) => {
+          this.numberOfUsers -= 1
+          this.$toaster.warning(user.name + ' has leaved the chat room')
+        }
+      )
   }
 })
