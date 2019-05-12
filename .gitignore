@@ -9,7 +9,7 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-
+package-lock.json
 
 # Created by https://www.gitignore.io/api/code,laravel
 # Edit at https://www.gitignore.io/?templates=code,laravel

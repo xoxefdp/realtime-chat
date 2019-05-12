@@ -1,4 +1,9 @@
 {
+    "author": "José Diaz",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/xoxefdp/realtime-chat.git"
+    },
     "private": true,
     "scripts": {
         "dev": "npm run development",
